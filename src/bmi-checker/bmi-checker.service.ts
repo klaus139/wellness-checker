@@ -1,19 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBmiCheckerDto } from './dto/create-bmi-checker.dto';
-import { bmiApiService } from './axios/axioscall';
 
 @Injectable()
 export class BmiCheckerService {
   async create(createBmiCheckerDto: CreateBmiCheckerDto) {
-    const bmiApisService = new bmiApiService();
-    createBmiCheckerDto.bmi = await bmiApisService.getBmi(
-      createBmiCheckerDto.weight,
-      createBmiCheckerDto.height,
-    );
-    createBmiCheckerDto.weightCategory = this.getWeightCategory(
-      createBmiCheckerDto.bmi,
-    );
-    return createBmiCheckerDto;
+    const weight = createBmiCheckerDto.weight;
+    const height = createBmiCheckerDto.height; //because we are using cm to measure
+    const bmi = weight / (height * height);
+    const weightCategory = this.getWeightCategory(bmi);
+    return { bmi, weightCategory };
   }
 
   private getWeightCategory(bmi: number): string {
@@ -28,9 +23,3 @@ export class BmiCheckerService {
     }
   }
 }
-
-// If your BMI is less than 18.5, it falls within the underweight range.
-// If your BMI is 18.5 to <25, it falls within the healthy weight range.
-// If your BMI is 25.0 to <30, it falls within the overweight range.
-// If your BMI is 30.0 or higher, it falls within the obesity range.
-// this is actual data from the cdc

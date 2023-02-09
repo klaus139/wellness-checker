@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { BmiCheckerService } from './bmi-checker.service';
 import { CreateBmiCheckerDto } from './dto/create-bmi-checker.dto';
 
@@ -15,11 +7,11 @@ export class BmiCheckerController {
   constructor(private readonly bmiCheckerService: BmiCheckerService) {}
 
   @Post()
-  create(
+  async create(
     @Body()
     createBmiCheckerDto: CreateBmiCheckerDto,
   ) {
-    const bmiResult = this.bmiCheckerService.create(createBmiCheckerDto);
+    const bmiResult = await this.bmiCheckerService.create(createBmiCheckerDto);
     return bmiResult;
   }
 }
